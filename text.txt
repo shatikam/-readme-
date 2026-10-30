@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>KilimoSmart | Farmer Advisory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: #f4f7f2;
+            color: #1e2e1e;
+            line-height: 1.5;
+            padding: 12px;
+        }
+        .app-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            overflow: hidden;
+            padding-bottom: 24px;
+        }
+        header {
+            background: #2e7d32;
+            color: white;
+            padding: 20px 16px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+        .tabs {
+            display: flex;
+            background: #e8f5e9;
+            border-bottom: 1px solid #c8e6c9;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 14px 8px;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2e7d32;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn.active {
+            background: white;
+            border-bottom-color: #2e7d32;
+            color: #1b5e20;
+        }
+        .tab-content {
+            padding: 16px;
+            display: none;
+            animation: fade 0.2s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fade { from { opacity: 0.5; } to { opacity: 1; } }
+
+        /* Form Elements */
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin: 12px 0 4px;
+            color: #2c3e2c;
+        }
+        select, input, button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #bdbdbd;
+            font-size: 1rem;
+            background: white;
+            color: #1e2e1e;
+        }
+        select:focus, input:focus {
+            outline: 2px solid #2e7d32;
+            border-color: transparent;
+        }
+        button.primary {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            font-weight: 700;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button.primary:hover {
+            background: #1b5e20;
+        }
+        button.secondary {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+            font-weight: 600;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+        .card {
+            background: #f1f8e9;
+            border-left: 4px solid #2e7d32;
+            padding: 14px;
+            border-radius: 12px;
+            margin: 12px 0;
+        }
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            color: #1b5e20;
+        }
+        .card p, .card li {
+            font-size: 0.9rem;
+            color: #2c3e2c;
+        }
+        .card ul {
+            padding-left: 18px;
+            margin-top: 6px;
+        }
+        .card li {
+            margin-bottom: 4px;
+        }
+        .badge {
+            display: inline-block;
+            background: #2e7d32;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+        }
+        .task-item:last-child { border-bottom: none; }
+        .task-date {
+            font-weight: 700;
+            color: #2e7d32;
+        }
+        .upload-area {
+            border: 2px dashed #a5d6a7;
+            background: #f9fff9;
+            border-radius: 16px;
+            padding: 30px 16px;
+            text-align: center;
+            cursor: pointer;
+            margin: 12px 0;
+            transition: 0.2s;
+        }
+        .upload-area:hover {
+            background: #e8f5e9;
+            border-color: #2e7d32;
+        }
+        .upload-area input { display: none; }
+        .preview-img {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 12px;
+            max-height: 200px;
+            object-fit: cover;
+        }
+        .result-box {
+            background: #fff3e0;
+            border-left: 4px solid #ef6c00;
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 12px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .disclaimer {
+            font-size: 0.75rem;
+            color: #757575;
+            margin-top: 20px;
+            text-align: center;
+            border-top: 1px solid #eeeeee;
+            padding-top: 12px;
+        }
+        .hidden { display: none; }
+        .mt-2 { margin-top: 8px; }
+        .text-sm { font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>🌱 KilimoSmart</h1>
+        <p>Climate-Smart Farming Advisory</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="advisor">🌍 Crop Advisor</button>
+        <button class="tab-btn" data-tab="calendar">📅 Farm Plan</button>
+        <button class="tab-btn" data-tab="diagnose">📷 Diagnose</button>
+    </div>
+
+    <!-- TAB 1: CROP ADVISOR -->
+    <div id="advisor" class="tab-content active">
+        <label for="regionSelect">Select your region (Agro-Ecological Zone):</label>
+        <select id="regionSelect">
+            <option value="highland">Highland (e.g., Kiambu, Nyeri, Kericho)</option>
+            <option value="midland">Midland (e.g., Nakuru, Embu, Kisii)</option>
+            <option value="lowland">Lowland / Coastal (e.g., Mombasa, Kilifi, Garissa)</option>
+            <option value="arid">Arid / Semi-Arid (ASAL)</option>
+        </select>
+
+        <label for="soilSelect">Soil Drainage (optional):</label>
+        <select id="soilSelect">
+            <option value="good">Good / Well-drained</option>
+            <option value="poor">Poor / Waterlogged prone</option>
+        </select>
+
+        <button class="primary" onclick="recommendCrop()">Get Recommendations</button>
+
+        <div id="recommendationResult" class="mt-2"></div>
+    </div>
+
+    <!-- TAB 2: FARM CALENDAR -->
+    <div id="calendar" class="tab-content">
+        <label for="cropSelect">Select a crop to view its management plan:</label>
+        <select id="cropSelect">
+            <option value="maize">Maize</option>
+            <option value="beans">Beans</option>
+            <option value="tomato">Tomato</option>
+        </select>
+
+        <button class="primary" onclick="generateCalendar()">Generate Farm Plan</button>
+
+        <div id="calendarResult" class="mt-2"></div>
+    </div>
+
+    <!-- TAB 3: DIAGNOSE -->
+    <div id="diagnose" class="tab-content">
+        <p class="text-sm" style="margin-bottom: 8px;">Upload a clear photo of the affected leaf or plant part.</p>
+        
+        <label class="upload-area" for="imageUpload">
+            <span style="font-size: 2rem;">📸</span>
+            <p style="font-weight: 600; color: #2e7d32;">Tap to take photo or upload</p>
+            <input type="file" id="imageUpload" accept="image/*" onchange="previewImage(event)">
+        </label>
+
+        <img id="imagePreview" class="preview-img hidden" alt="Preview">
+
+        <button id="diagnoseBtn" class="primary hidden" onclick="simulateDiagnosis()">Analyze Image</button>
+
+        <div id="diagnosisResult" class="result-box">
+            <h3 style="color: #ef6c00;">🔍 Diagnosis Result</h3>
+            <p id="diseaseName" style="font-weight: 700; font-size: 1.1rem; margin: 6px 0;"></p>
+            <p id="diseaseAdvice" class="text-sm"></p>
+            <p class="text-sm" style="margin-top: 8px; font-style: italic; color: #555;">Note: This is a simulated result. For accurate diagnosis, consult a local extension officer.</p>
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        Data sourced from FAO ECOCROP, KALRO & Kenya Extension Manuals. Always consult local experts before large-scale application.
+    </div>
+</div>
+
+<script>
+    // --- DATA LAYER (Based on search results) ---
+
+    // 1. Crop Recommendation Data by AEZ
+    const cropData = {
+        highland: {
+            crops: ["Tea", "Maize", "Beans", "Potatoes", "Wheat", "Pyrethrum"],
+            note: "Highland zones (15-18°C) are suitable for tea, maize, and vegetables. Ensure soil pH is adequate for maize.",
+            source: "FAO Kenya Agro-Ecological Zones [citation:8]"
+        },
+        midland: {
+            crops: ["Coffee", "Maize", "Beans", "Sorghum", "Sunflower", "Macadamia"],
+            note: "Upper Midland (18-21°C) is ideal for coffee and maize. Lower Midland (21-24°C) supports cotton and sorghum.",
+            source: "FAO Kenya Agro-Ecological Zones [citation:8]"
+        },
+        lowland: {
+            crops: ["Cassava", "Millet", "Cowpeas", "Sugarcane", "Coconut", "Mangoes"],
+            note: "Warm lowland zones (>24°C) are best for drought-tolerant crops like cassava and millet.",
+            source: "FAO Kenya Agro-Ecological Zones [citation:8]"
+        },
+        arid: {
+            crops: ["Sorghum", "Green Grams", "Cowpeas", "Drought-tolerant Maize", "Castor"],
+            note: "In ASAL areas, prioritize early-maturing and drought-resistant varieties. Sorghum is highly recommended.",
+            source: "FAO ECOCROP & Kenya AEZ data [citation:2][citation:8]"
+        }
+    };
+
+    // 2. Fertilizer & Calendar Data
+    const cropPlans = {
+        maize: {
+            name: "Maize (Hybrid)",
+            fertilizer: "DAP 50kg/acre at planting + CAN 50kg/acre at knee-height (3-4 weeks)",
+            tasks: [
+                { week: 0, task: "Land Preparation & Planting", detail: "Plough deep. Plant with DAP (50kg/acre). Do NOT apply CAN now." },
+                { week: 3, task: "Top-Dress (CAN)", detail: "Apply CAN 50kg/acre when maize is knee-high. Nitrogen is wasted if applied earlier." },
+                { week: 4, task: "Weeding (Critical)", detail: "First weeding. Keep weeds out during the first 4-6 weeks." },
+                { week: 6, task: "Pest Scouting (Fall Armyworm)", detail: "Check whorls for FAW. Treat when larvae are small." },
+                { week: 8, task: "Second Weeding / Top-dress", detail: "If needed, weed again. Monitor for MLN (Maize Lethal Necrosis)." }
+            ],
+            source: "Kenya Fertilizer Rates [citation:3][citation:10]"
+        },
+        beans: {
+            name: "Beans (Dry)",
+            fertilizer: "DAP 25kg/acre + Rhizobium inoculant at planting. NO Nitrogen top-dress.",
+            tasks: [
+                { week: 0, task: "Planting", detail: "Apply DAP (25kg/acre) and Rhizobium. Do not apply CAN; it suppresses nodulation." },
+                { week: 2, task: "Weeding & Bean Fly Check", detail: "Weed early. Check for bean fly maggots (stem thickening)." },
+                { week: 4, task: "Pest Management", detail: "Scout for aphids and cutworms. Use recommended pesticides if thresholds are met." },
+                { week: 6, task: "Disease Check", detail: "Watch for Halo Blight (yellow rings) or Angular Leaf Spot." }
+            ],
+            source: "Kenya Extension Manual & Fertilizer Guide [citation:3][citation:6]"
+        },
+        tomato: {
+            name: "Tomato",
+            fertilizer: "DAP 50kg/acre at planting. CAN 50kg/acre at weeks 2, 5, and 8.",
+            tasks: [
+                { week: 0, task: "Transplanting", detail: "Transplant seedlings. Apply DAP. Stake plants 2 weeks later." },
+                { week: 2, task: "Top-Dress 1 & Weeding", detail: "Apply CAN 50kg/acre. Weed carefully to avoid root damage." },
+                { week: 5, task: "Top-Dress 2 & Pruning", detail: "Apply CAN. Prune lower leaves to improve airflow." },
+                { week: 8, task: "Top-Dress 3 & Pest Check", detail: "Final CAN application. Scout for Tuta absoluta (leaf miner)." },
+                { week: 10, task: "Fruiting Stage", detail: "Ensure consistent watering to prevent blossom end rot." }
+            ],
+            source: "Tomato Farming Guide & Fertilizer Rates [citation:3][citation:7]"
+        }
+    };
+
+    // --- LOGIC ---
+
+    // Tab Switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // 1. Recommend Crop
+    function recommendCrop() {
+        const region = document.getElementById('regionSelect').value;
+        const data = cropData[region];
+        const resultDiv = document.getElementById('recommendationResult');
+        
+        let html = `
+            <div class="card">
+                <span class="badge">Recommended Crops</span>
+                <h3>${data.crops.join(' • ')}</h3>
+                <p>${data.note}</p>
+                <p class="text-sm" style="margin-top: 8px; color: #555;"><strong>Source:</strong> ${data.source}</p>
+            </div>
+        `;
+        resultDiv.innerHTML = html;
+    }
+
+    // 2. Generate Calendar
+    function generateCalendar() {
+        const cropKey = document.getElementById('cropSelect').value;
+        const plan = cropPlans[cropKey];
+        const resultDiv = document.getElementById('calendarResult');
+
+        let tasksHtml = plan.tasks.map(t => `
+            <div class="task-item">
+                <div>
+                    <span class="task-date">Week ${t.week}:</span> 
+                    <strong>${t.task}</strong>
+                    <p class="text-sm" style="color: #555; margin-top: 2px;">${t.detail}</p>
+                </div>
+            </div>
+        `).join('');
+
+        let html = `
+            <div class="card">
+                <span class="badge">Farm Plan: ${plan.name}</span>
+                <p style="margin-bottom: 8px;"><strong>Fertilizer Strategy:</strong> ${plan.fertilizer}</p>
+                <div style="background: white; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    ${tasksHtml}
+                </div>
+                <p class="text-sm" style="margin-top: 12px; color: #555;"><strong>Source:</strong> ${plan.source}</p>
+            </div>
+        `;
+        resultDiv.innerHTML = html;
+    }
+
+    // 3. Image Preview & Diagnosis
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('imagePreview');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                document.getElementById('diagnoseBtn').classList.remove('hidden');
+                document.getElementById('diagnosisResult').classList.remove('show');
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function simulateDiagnosis() {
+        // This simulates the AI response. In a real app, you would send the image to an API.
+        const diseases = [
+            { name: "Fall Armyworm (FAW) on Maize", advice: "Scout early. Apply recommended pesticides (e.g., emamectin benzoate) when larvae are small. Handpick eggs where possible. Consult local agro-vet for resistant varieties." },
+            { name: "Bean Fly (Bean Stem Maggot)", advice: "Uproot and destroy wilted plants. Apply mulch to promote root development. Spray acetamiprid-based products if severe. Use certified seed dressed with imidacloprid." },
+            { name: "Tomato Late Blight", advice: "Improve air circulation by pruning. Apply copper-based fungicides or mancozeb. Avoid overhead watering. Remove infected leaves immediately." },
+            { name: "Maize Lethal Necrosis (MLN)", advice: "There is no cure once infected. Uproot and destroy affected plants. For future seasons, plant MLN-resistant varieties and control thrips/beetles (vectors)." }
+        ];
+        
+        // Pick a random disease for demonstration
+        const randomDisease = diseases[Math.floor(Math.random() * diseases.length)];
+        
+        document.getElementById('diseaseName').innerText = "Possible: " + randomDisease.name;
+        document.getElementById('diseaseAdvice').innerText = randomDisease.advice;
+        document.getElementById('diagnosisResult').classList.add('show');
+        document.getElementById('diagnoseBtn').classList.add('hidden');
+    }
+
+    // Initialize with default view
+    window.onload = function() {
+        // Optional: Pre-fill or show default
+    };
+</script>
+</body>
+</html>
